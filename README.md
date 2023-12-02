@@ -1,6 +1,10 @@
 # FindGitHubDeveloper
 
-A tool for discovering developers across GitHub
+A tool for discovering developers across GitHub.
+
+Welcome to use and make any valuable suggestions!
+
+https://findgithubuser.nzcer.cn/
 
 # Huge Amount of User Info 
 The data source of FindGitHubDeveloper is a python crawler that continuously crawls GitHub developer data.
