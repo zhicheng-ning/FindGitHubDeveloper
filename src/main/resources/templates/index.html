@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Page</title>
+    <!-- 引入Bootstrap样式 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+</head>
+<body>
+<header class="bg-light p-3">
+    <div class="container">
+        <!-- 表单条件 -->
+        <form th:action="@{/search}" method="get">
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="name">User Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" th:value="${param.name}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="company">Company:</label>
+                    <input type="text" id="company" name="company" class="form-control" th:value="${param.company}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="blog">Has Blog:</label>
+                    <select id="blog" name="blogStatus" class="form-control">
+                        <option th:each="enumValue : ${T(cn.nzcer.findgithubdeveloper.enums.BlogStatusEnum).values()}"
+                                th:value="${enumValue}"
+                                th:text="${enumValue.getMessage()}"
+                                th:selected="${param.blogStatus != null and param.blogStatus == enumValue}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" class="form-control" th:value="${param.location}">
+                </div>
+                <!-- 更多条件 -->
+            </div>
+            <div class="row mt-3">
+                <!-- 更多条件 -->
+                <!-- 用户 public_repos、followers、following 的数量范围 -->
+                <div class="col-md-3 form-group">
+                    <label for="minRepos">Min Repos:</label>
+                    <input type="number" id="minRepos" name="minRepos" class="form-control" th:value="${param.minRepos}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="maxRepos">Max Repos:</label>
+                    <input type="number" id="maxRepos" name="maxRepos" class="form-control" th:value="${param.maxRepos}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="minFollowers">Min Followers:</label>
+                    <input type="number" id="minFollowers" name="minFollowers" class="form-control" th:value="${param.minFollowers}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="maxFollowers">Max Followers:</label>
+                    <input type="number" id="maxFollowers" name="maxFollowers" class="form-control" th:value="${param.maxFollowers}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="minFollowers">Min Followings:</label>
+                    <input type="number" id="minFollowings" name="minFollowings" class="form-control" th:value="${param.minFollowings}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="maxFollowers">Max Followings:</label>
+                    <input type="number" id="maxFollowings" name="maxFollowings" class="form-control" th:value="${param.maxFollowings}">
+                </div>
+                <!-- 更多条件 -->
+                <!-- 用户的创建时间范围 -->
+                <div class="col-md-3 form-group">
+                    <label for="minDate">Min Created Date:</label>
+                    <input type="date" id="minDate" name="minCreatedAt" class="form-control" th:value="${param.minCreatedAt}">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="maxDate">Max Created Date:</label>
+                    <input type="date" id="maxDate" name="maxCreatedAt" class="form-control" th:value="${param.maxCreatedAt}">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</header>
+
+<main class="mt-4">
+    <div class="container">
+        <!-- 搜索结果展示区域 -->
+        <div class="card">
+            <div class="card-header" id="columnToggles"></div>
+
+            <div class="card-body">
+                <!-- 搜索结果表格 -->
+                <div class="table-responsive">
+                    <table id="resultTable" class="table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Login</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Blog</th>
+                            <th>Location</th>
+                            <th>Email</th>
+                            <th>Bio</th>
+                            <th>Public Repos</th>
+                            <th>Followers</th>
+                            <th>Following</th>
+                            <th>Created At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 使用Thymeleaf循环展示搜索结果 -->
+                        <tr th:each="result : ${searchResults}">
+                            <td th:text="${result.id}">1</td>
+                            <!--                            <td th:text="${result.login}">1</td>-->
+                            <td>
+                                <a th:href="@{'https://github.com/' + ${result.login}}" th:text="${result.login}">1</a>
+                            </td>
+                            <td th:text="${result.name}">Item</td>
+                            <td th:text="${result.company}">Item</td>
+                            <td th:text="${result.blog}">Item</td>
+                            <td th:text="${result.location}">Item</td>
+                            <td th:text="${result.email}">Item</td>
+                            <td th:text="${result.bio}" th:attr="title=${result.bio}">Item</td>
+                            <td th:text="${result.publicRepos}">Item</td>
+                            <td th:text="${result.followers}">Item</td>
+                            <td th:text="${result.following}">Item</td>
+                            <td th:text="${#dates.format(result.createdAt, 'yyyy-MM-dd HH:mm:ss')}">Item</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <!-- 假设pageInfo是后端传递给前端的分页信息对象 -->
+        <!-- 在这里展示分页按钮 -->
+        <div th:if="${pageInfo != null and pageInfo.pages > 1}">
+            <ul class="pagination" id="paginationLinks">
+                <!-- Previous Button -->
+                <li th:class="${pageInfo.pageNum == 1} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" th:href="@{'/search?pageNum=' + ${pageInfo.pageNum - 1}}">Previous</a>
+                </li>
+
+                <!-- Pagination Numbers -->
+                <li th:class="${pageInfo.pageNum == 1} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{'/search?pageNum=1'}">1</a>
+                </li>
+                <span th:if="${pageInfo.pageNum > 4}">...</span>
+                <li th:each="i : ${#numbers.sequence((pageInfo.pageNum > 3 ? pageInfo.pageNum - 2 : 2), (pageInfo.pageNum < pageInfo.pages - 2 ? pageInfo.pageNum + 2 : pageInfo.pages - 1))}"
+                    th:class="${i == pageInfo.pageNum} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{'/search?pageNum=' + ${i}}">[[${i}]]</a>
+                </li>
+                <span th:if="${pageInfo.pageNum < pageInfo.pages - 3}">...</span>
+                <li th:class="${pageInfo.pageNum == pageInfo.pages} ? 'page-item active' : 'page-item'">
+                    <a class="page-link" th:href="@{'/search?pageNum=' + ${pageInfo.pages}}">[[${pageInfo.pages}]]</a>
+                </li>
+
+                <!-- Next Button -->
+                <li th:class="${pageInfo.pageNum == pageInfo.pages} ? 'page-item disabled' : 'page-item'">
+                    <a class="page-link" th:href="@{'/search?pageNum=' + ${pageInfo.pageNum + 1}}">Next</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</main>
+
+<!-- 引入Bootstrap的JavaScript和jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#resultTable').DataTable({
+            'paging': false,
+            "columnDefs": [
+                {"targets": [4, 7], "visible": false} // 设置默认隐藏的列
+            ]
+        });
+
+        // 添加复选框列表
+        $('#columnToggles').on('change', 'input[type="checkbox"]', function () {
+            var column = table.column($(this).attr('data-column'));
+            column.visible(!column.visible());
+        });
+
+        // 创建列选择复选框列表
+        table.columns().every(function () {
+            var column = this;
+            $('#columnToggles').append('<label><input type="checkbox" data-column="' + column.index() + '" ' + (column.visible() ? 'checked' : '') + '>' + column.header().innerHTML + '</label>');
+        });
+
+        // 获取当前搜索参数
+        var searchParams = new URLSearchParams(window.location.search);
+
+        // 监听分页按钮点击事件
+        $('#paginationLinks').on('click', 'a.page-link', function (e) {
+            e.preventDefault();
+            var pageNum = $(this).attr('href').split('pageNum=')[1]; // 获取点击的页码
+
+            searchParams.set('pageNum', pageNum);
+
+            var newURL = window.location.pathname + '?' + searchParams.toString(); // 构建新的URL
+            window.location.href = newURL; // 重定向至新的URL
+        });
+    });
+</script>
+
+
+</body>
+</html>
