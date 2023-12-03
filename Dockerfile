@@ -1,0 +1,9 @@
+FROM openjdk:17-jdk-alpine
+LABEL authors="nzcer"
+VOLUME /tmp
+ARG MYSQL_URL
+ARG MYSQL_USERNAME
+ARG MYSQL_PASSWORD
+ENV MYSQL_URL=${MYSQL_URL} MYSQL_USERNAME=${MYSQL_USERNAME} MYSQL_PASSWORD=${MYSQL_PASSWORD}
+ADD target/FindGitHubDeveloper-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]

@@ -6,9 +6,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: 1234567
-    url: jdbc:mysql://localhost:3306/gh_user?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${MYSQL_URL}:3306/${DB_NAME}?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     hikari:
       minimumIdle: 20
       maximum-pool-size: 100

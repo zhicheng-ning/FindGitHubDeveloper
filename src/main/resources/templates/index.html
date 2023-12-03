@@ -211,6 +211,25 @@
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const blogStatus = urlParams.get('blogStatus');
+
+        if (blogStatus) {
+            const selectElement = document.getElementById('blog');
+            const options = selectElement.options;
+
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].value === blogStatus) {
+                    options[i].selected = true;
+                    break;
+                }
+            }
+        }
+    });
+</script>
+
 
 </body>
 </html>

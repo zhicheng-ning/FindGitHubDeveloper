@@ -36,11 +36,11 @@
         <if test="company!= null and company!=''">
             AND company like CONCAT('%',#{company},'%')
         </if>
-        <if test="blogStatus!= null and blogStatus.getMessage() == 'NOT_EXIST'">
-            AND blog_status = NULL
+        <if test="blogStatus != null and blogStatus.getMessage() == 'NOT EXIST'">
+            AND blog = ''
         </if>
-        <if test="blogStatus!= null and blogStatus.getMessage() == 'EXIST'">
-            AND blog_status != NULL
+        <if test="blogStatus != null and blogStatus.getMessage() == 'EXIST'">
+            AND blog != ''
         </if>
         <if test="location!= null and location!=''">
             AND location like CONCAT('%', #{location},'%')

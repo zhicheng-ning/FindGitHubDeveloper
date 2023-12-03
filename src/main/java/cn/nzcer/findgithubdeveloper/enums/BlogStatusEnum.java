@@ -8,8 +8,8 @@ package cn.nzcer.findgithubdeveloper.enums;
  * @description:
  */
 public enum BlogStatusEnum {
-    EXIST(1, "YES"),
-    NOT_EXIST(0, "No"),
+    EXIST(1, "EXIST"),
+    NOT_EXIST(0, "NOT EXIST"),
     NOT_CARE(-1, "Not Care");
     private final Integer code;
     private final String  message;
